@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Tarefas - Login</title>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            height: 100vh;
+            margin: 0;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; /* Importante! */
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button[type="button"] {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <form>
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome_usuario">
+
+        <br><br>
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email_usuario">
+
+        <br><br>
+
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha_usuario">
+
+        <br><br>
+
+        <label for="foto">Foto de Perfil:</label>
+        <input type="file" id="foto" name="foto_usuario">
+
+        <br><br>
+
+        <button type="submit">Cadastrar</button>
+        <button type="button">Entrar</button>
+    </form>
+
+</body>
+</html>
