@@ -43,3 +43,15 @@ body {
             border: none;
             cursor: pointer;
         }
+
+@media (max-width: 600px) {
+    @media (max-width: 600px) {
+    form {
+        padding: 20px;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+    }
+}
+    /* Estilos que só serão aplicados em telas com largura máxima de 600px virão aqui */
+}
