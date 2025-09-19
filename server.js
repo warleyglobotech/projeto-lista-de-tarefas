@@ -1,5 +1,3 @@
-// js/server.js
-
 const express = require('express');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
@@ -8,16 +6,14 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// Middleware para processar JSON e dados de formulário
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Conexão com o banco de dados MySQL
 const db = mysql.createConnection({
     host: 'localhost',
-    user: 'root', // Substitua pelo seu usuário do MySQL
-    password: '@MySQL2712', // Substitua pela sua senha do MySQL
-    database: 'bd_lista_tarefas' // Substitua pelo nome do seu banco de dados
+    user: 'root',
+    password: 'admin',
+    database: 'bd_lista_tarefas'
 });
 
 db.connect(err => {
@@ -28,20 +24,15 @@ db.connect(err => {
     console.log('Conectado ao banco de dados MySQL.');
 });
 
-// Serve arquivos estáticos da pasta raiz do projeto.
-// O '__dirname' aponta para 'js', então '..' sobe um nível.
 app.use(express.static(path.join(__dirname, '..')));
 
-// Rota principal para servir o index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
-// --- Rota para Registro de Novo Usuário (POST /registrar) ---
+// --- Rota para Registro ---
 app.post('/registrar', async (req, res) => {
     const { nome, email, senha } = req.body;
-
-    // Hashear a senha para segurança
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(senha, saltRounds);
 
@@ -49,32 +40,96 @@ app.post('/registrar', async (req, res) => {
     db.query(query, [nome, email, hashedPassword], (err, result) => {
         if (err) {
             console.error('Erro ao inserir usuário:', err);
-            // Mensagem mais amigável para o usuário
             return res.status(500).json({ success: false, message: 'Erro ao registrar usuário. O e-mail já pode estar em uso.' });
         }
         res.status(201).json({ success: true, message: 'Usuário registrado com sucesso!' });
     });
 });
 
-// --- Rota para Login de Usuário (POST /login) ---
+// --- Rota para Login ---
 app.post('/login', (req, res) => {
     const { email, senha } = req.body;
-
     const query = 'SELECT * FROM usuarios WHERE email = ?';
+
     db.query(query, [email], async (err, results) => {
         if (err || results.length === 0) {
             return res.status(401).json({ success: false, message: 'E-mail ou senha incorretos.' });
         }
 
         const user = results[0];
-        // Comparar a senha fornecida com a senha hashada do banco
         const match = await bcrypt.compare(senha, user.senha_hash);
 
         if (match) {
-            res.json({ success: true, message: 'Login bem-sucedido!' });
+            res.json({ success: true, message: 'Login bem-sucedido!', user: { id: user.id, email: user.email } });
         } else {
             res.status(401).json({ success: false, message: 'E-mail ou senha incorretos.' });
         }
+    });
+});
+
+// --- Rota para criar uma lista ---
+app.post('/listas', (req, res) => {
+    const { nome, template, usuario_id } = req.body;
+    const conteudo = { template: template, tarefas: [] };
+
+    const query = 'INSERT INTO listas (nome_lista, conteudo_lista, usuario_id) VALUES (?, ?, ?)';
+    db.query(query, [nome, JSON.stringify(conteudo), usuario_id], (err, result) => {
+        if (err) {
+            console.error('Erro ao criar a lista:', err);
+            return res.status(500).json({ success: false, message: 'Erro ao criar a lista.' });
+        }
+        res.status(201).json({ success: true, message: 'Lista criada com sucesso!' });
+    });
+});
+
+// --- Rota para buscar as listas do usuário ---
+app.get('/listas/:usuario_id', (req, res) => {
+    const { usuario_id } = req.params;
+
+    const query = 'SELECT id, nome_lista, conteudo_lista FROM listas WHERE usuario_id = ?';
+    db.query(query, [usuario_id], (err, results) => {
+        if (err) {
+            console.error('Erro ao buscar as listas:', err);
+            return res.status(500).json({ success: false, message: 'Erro ao buscar as listas.' });
+        }
+        
+        // AQUI: Remova o JSON.parse()
+        const listas = results.reduce((obj, item) => {
+            obj[item.nome_lista] = {
+                id: item.id,
+                ...item.conteudo_lista // Use o objeto diretamente
+            };
+            return obj;
+        }, {});
+        res.json(listas);
+    });
+});
+
+// --- Rota para atualizar uma lista ---
+app.put('/listas', (req, res) => {
+    const { id, conteudo } = req.body;
+
+    const query = 'UPDATE listas SET conteudo_lista = ? WHERE id = ?';
+    db.query(query, [JSON.stringify(conteudo), id], (err, result) => {
+        if (err) {
+            console.error('Erro ao atualizar a lista:', err);
+            return res.status(500).json({ success: false, message: 'Erro ao atualizar a lista.' });
+        }
+        res.json({ success: true, message: 'Lista atualizada com sucesso!' });
+    });
+});
+
+// --- Rota para deletar uma lista ---
+app.delete('/listas/:id_lista', (req, res) => {
+    const { id_lista } = req.params;
+    const query = 'DELETE FROM listas WHERE id = ?';
+
+    db.query(query, [id_lista], (err, result) => {
+        if (err) {
+            console.error('Erro ao excluir a lista:', err);
+            return res.status(500).json({ success: false, message: 'Erro ao excluir a lista.' });
+        }
+        res.json({ success: true, message: 'Lista excluída com sucesso!' });
     });
 });
 

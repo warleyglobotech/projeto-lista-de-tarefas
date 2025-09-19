@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Lista de Tarefas - Painel</title>
+</head>
+
+<body class="bg-light">
+
+<header>
+    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-primary shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="./painel.html">Painel</a>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link text-white" href="./listas.html">Acessar Listas</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#" id="logoutButton">Sair</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="container my-5">
+    <h1 class="mb-4 text-primary">Gerenciamento de Listas</h1>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Criar uma lista</h5>
+                    <fieldset>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="nomeLista" placeholder="Nome da lista">
+                            <label for="nomeLista">Nome da lista</label>
+                        </div>
+                        <legend class="fs-6">Escolher template da lista</legend>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="template" id="radio1" value="padrao">
+                            <label class="form-check-label" for="radio1">Lista padrão</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="template" id="radio2" value="estudos">
+                            <label class="form-check-label" for="radio2">Cronograma de estudos</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="template" id="radio3" value="compras">
+                            <label class="form-check-label" for="radio3">Lista de compras</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="template" id="radio4" value="contas">
+                            <label class="form-check-label" for="radio4">Contas a pagar</label>
+                        </div>
+                        <button type="submit" class="btn btn-outline-success">Criar lista</button>
+                        <button type="reset" class="btn btn-outline-secondary">Limpar</button>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">Excluir uma lista</h5>
+                    <fieldset>
+                        <select class="form-select mb-3">
+                            <option selected>Selecione a lista</option>
+                            <option value="estudos">Materiais para estudar</option>
+                            <option value="compras">Lista de compras</option>
+                            <option value="contas">Contas a pagar</option>
+                        </select>
+                        <button type="submit" class="btn btn-outline-danger">Excluir lista</button>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="./../js/painel.js"></script>
+<script src="./../js/logout.js"></script>
+</body>
+</html>
